@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AccessCard</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f2f2f7;
+display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
+.card{background:#fff;padding:30px;border-radius:18px;box-shadow:0 8px 20px rgba(0,0,0,.1);width:320px}
+h1{text-align:center;margin-top:0}
+label{font-weight:600}
+input{width:100%;box-sizing:border-box;padding:12px;font-size:18px;margin-top:8px;
+border:1px solid #ccc;border-radius:10px}
+.result{text-align:center;margin-top:28px}
+.number{font-size:42px;font-weight:bold;color:#007AFF;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>AccessCard</h1>
+
+<label>UID</label>
+<input id="uid" placeholder="04:55:73:5A:C9:2A:81" autocomplete="off">
+
+<div class="result">
+<div>Visionis Number</div>
+<div id="result" class="number">---</div>
+</div>
+</div>
+
+<script>
+const input=document.getElementById('uid');
+const result=document.getElementById('result');
+
+input.addEventListener('input',calculate);
+
+function calculate(){
+ let text=input.value.toUpperCase().replace(/[^0-9A-F]/g,'').substring(0,14);
+
+ let formatted='';
+ for(let i=0;i<text.length;i+=2){
+   if(i>0) formatted+=':';
+   formatted+=text.substring(i,i+2);
+ }
+ input.value=formatted;
+
+ let bytes=text.match(/.{1,2}/g);
+ if(!bytes || bytes.length<3){
+   result.textContent='---';
+   return;
+ }
+
+ let hex=bytes[2]+bytes[1]+bytes[0];
+ result.textContent=parseInt(hex,16);
+}
+</script>
+</body>
+</html>
